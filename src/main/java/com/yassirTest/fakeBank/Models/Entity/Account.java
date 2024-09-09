@@ -1,6 +1,10 @@
 package com.yassirTest.fakeBank.Models.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,18 +30,27 @@ public class Account {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customerId")
-
+    @NotNull
     private Customer customer;
+    @NotNull
+    @NotEmpty
     private String username;
+    @NotNull
+    @NotEmpty
+    @Size(min = 8)
     private String password;
 
     @CreatedDate
     @Column(updatable = false)
+    @NotNull
     private LocalDateTime createdAt;
 
     @LastModifiedDate
+    @NotNull
     private LocalDateTime updatedAt;
 
     @Column(precision = 19, scale = 2)
+    @NotNull
+    @Min(0)
     private BigDecimal balance;
 }
