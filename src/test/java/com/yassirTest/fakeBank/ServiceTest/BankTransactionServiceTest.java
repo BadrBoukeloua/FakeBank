@@ -47,19 +47,23 @@ class BankTransactionServiceTest {
         @Test
         void testCreateTransaction_Deposit() throws InvalidTransactionException {
 
-
+                CustomerDTO customerDTO = CustomerDTO.builder()
+                        .customerId(2L)
+                        .name("doe_john")
+                        .build();
 
                 AccountDTO accountDTOReceiver = AccountDTO.builder()
-                                .accountId(2L)
-                                .username("john_doe")
-                                .balance(BigDecimal.valueOf(1000))
-                                .build();
+                        .accountId(2L)
+                        .customer(customerDTO)
+                        .username("john_doe")
+                        .balance(BigDecimal.valueOf(1000))
+                        .build();
 
                 BankTransactionDTO transactionDTO = BankTransactionDTO.builder()
-                                .transactionType(TransactionType.DEPOSIT)
-                                .receiver(accountDTOReceiver)
-                                .amount(BigDecimal.valueOf(1000))
-                                .build();
+                        .transactionType(TransactionType.DEPOSIT)
+                        .receiver(accountDTOReceiver)
+                        .amount(BigDecimal.valueOf(1000))
+                        .build();
 
                 Account receiver = AccountDTO.toENTITY(accountDTOReceiver);
 
@@ -81,15 +85,21 @@ class BankTransactionServiceTest {
         @Test
         void testCreateTransaction_Transfer() throws InvalidTransactionException {
 
+                CustomerDTO customerDTO = CustomerDTO.builder()
+                                .customerId(1L)
+                                .name("john_doe")
+                                .build();
 
                 AccountDTO accountDTOSender = AccountDTO.builder()
                                 .accountId(1L)
+                                .customer(customerDTO)
                                 .username("john_doe")
                                 .balance(BigDecimal.valueOf(1000))
                                 .build();
 
                 AccountDTO accountDTOReceiver = AccountDTO.builder()
                                 .accountId(2L)
+                                .customer(customerDTO)
                                 .username("jane_doe")
                                 .balance(BigDecimal.valueOf(500))
                                 .build();
@@ -127,14 +137,21 @@ class BankTransactionServiceTest {
         @Test
         void testCreateTransaction_Transfer_InsufficientFunds() {
 
+                CustomerDTO customerDTO = CustomerDTO.builder()
+                                .customerId(1L)
+                                .name("john_doe")
+                                .build();
+
                 AccountDTO accountDTOSender = AccountDTO.builder()
                                 .accountId(1L)
+                                .customer(customerDTO)
                                 .username("john_doe")
                                 .balance(BigDecimal.valueOf(100))
                                 .build();
 
                 AccountDTO accountDTOReceiver = AccountDTO.builder()
                                 .accountId(2L)
+                                .customer(customerDTO)
                                 .username("jane_doe")
                                 .balance(BigDecimal.valueOf(500))
                                 .build();

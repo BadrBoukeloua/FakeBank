@@ -84,7 +84,7 @@ public class BankTransactionService {
         return BankTransactionDTO.toDTO(savedTransaction);
     }
 
-    public List<BankTransactionDTO> getAllTransactions() {
+    public List<BankTransactionDTO> getAllTransactions() throws InvalidTransactionException {
         List<BankTransaction> bankTransactionList = bankTransactionRepo.findAll();
         List<BankTransactionDTO> bankTransactionDTOList = new ArrayList<>();
         for (BankTransaction bankTransaction : bankTransactionList) {
@@ -94,7 +94,7 @@ public class BankTransactionService {
         return bankTransactionDTOList;
     }
 
-    public List<BankTransactionDTO> getAccountTransaction(Long accountId) {
+    public List<BankTransactionDTO> getAccountTransaction(Long accountId) throws InvalidTransactionException {
 
         List<BankTransaction> bankTransactionList = bankTransactionRepo.findBySenderOrReceiver(accountId);
         List<BankTransactionDTO> bankTransactionDTOList = new ArrayList<>();
@@ -106,7 +106,7 @@ public class BankTransactionService {
         return bankTransactionDTOList;
     }
 
-    public BankTransactionDTO getTransactionById(Long transactionId) {
+    public BankTransactionDTO getTransactionById(Long transactionId) throws InvalidTransactionException {
         BankTransaction transaction = bankTransactionRepo.findById(transactionId)
                 .orElseThrow(
                         () -> new TransactionNotFoundException("Transaction with ID " + transactionId + " not found"));

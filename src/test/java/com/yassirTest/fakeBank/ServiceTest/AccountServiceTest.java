@@ -36,9 +36,12 @@ class AccountServiceTest {
     @Test
     void testCreateAccount() {
 
-
+        CustomerDTO customerDTO = CustomerDTO.builder()
+                .customerId(2L)
+                .name("doe_john")
+                .build();
         AccountDTO accountDTO = AccountDTO.builder()
-
+                .customer(customerDTO)
                 .username("john_doe")
                 .balance(BigDecimal.valueOf(1000))
                 .build();

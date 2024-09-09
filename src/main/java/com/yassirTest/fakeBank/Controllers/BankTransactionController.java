@@ -28,19 +28,19 @@ public class BankTransactionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BankTransactionDTO>> getAllTransactions() {
+    public ResponseEntity<List<BankTransactionDTO>> getAllTransactions() throws InvalidTransactionException {
         List<BankTransactionDTO> allTransactions = bankTransactionService.getAllTransactions();
         return new ResponseEntity<>(allTransactions, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BankTransactionDTO> getTransactionById(@PathVariable("id") Long transactionId) {
+    public ResponseEntity<BankTransactionDTO> getTransactionById(@PathVariable("id") Long transactionId) throws InvalidTransactionException {
         BankTransactionDTO transactionDTO = bankTransactionService.getTransactionById(transactionId);
         return new ResponseEntity<>(transactionDTO, HttpStatus.OK);
     }
 
     @GetMapping("/account/{id}")
-    public List<BankTransactionDTO> getTransactionsForAccount(@PathVariable("id") Long accountId) {
+    public List<BankTransactionDTO> getTransactionsForAccount(@PathVariable("id") Long accountId) throws InvalidTransactionException {
         return bankTransactionService.getAccountTransaction(accountId);
     }
 }
