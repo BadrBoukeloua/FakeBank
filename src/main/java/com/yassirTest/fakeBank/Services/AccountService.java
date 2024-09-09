@@ -5,6 +5,7 @@ import com.yassirTest.fakeBank.CustomExceptions.InvalidDeletionException;
 import com.yassirTest.fakeBank.Models.Entity.Account;
 import com.yassirTest.fakeBank.Models.Entity.BankTransaction;
 import com.yassirTest.fakeBank.Models.EntityDTO.AccountDTO;
+import com.yassirTest.fakeBank.Models.EntityDTO.CustomerDTO;
 import com.yassirTest.fakeBank.Repoaitories.AccountRepo;
 import com.yassirTest.fakeBank.Repoaitories.BankTransactionRepo;
 import org.mindrot.jbcrypt.BCrypt;
@@ -50,8 +51,9 @@ public class AccountService {
     }
 
     public AccountDTO updateAccount(Long accountId, AccountDTO accountdto) {
-        accountRepo.findById(accountId)
+        Account existingaccount = accountRepo.findById(accountId)
                 .orElseThrow(() -> new AccountNotFoundException("Account with ID " + accountId + " not found"));
+        accountdto.setCustomer(CustomerDTO.toDTO(existingaccount.getCustomer()));
         accountdto.setPassword(hashPassword(accountdto.getPassword()));
         accountdto.setAccountId(accountId);
         Account updatedAccount = AccountDTO.toENTITY(accountdto);
