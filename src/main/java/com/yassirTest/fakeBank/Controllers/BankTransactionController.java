@@ -2,6 +2,7 @@ package com.yassirTest.fakeBank.Controllers;
 
 
 import com.yassirTest.fakeBank.Models.EntityDTO.BankTransactionDTO;
+import com.yassirTest.fakeBank.Services.AccountService;
 import com.yassirTest.fakeBank.Services.BankTransactionService;
 import jakarta.transaction.InvalidTransactionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,16 @@ public class BankTransactionController {
 
     @Autowired
     private BankTransactionService bankTransactionService;
+    @Autowired
+    private AccountService accountService;
 
     @PostMapping
     public ResponseEntity<BankTransactionDTO> createTransaction(
             @RequestBody @Validated BankTransactionDTO bankTransactionDTO) throws InvalidTransactionException {
+
+        bankTransactionDTO.setSender( accountService.getAccount(bankTransactionDTO.getSender().getAccountId()));
+        bankTransactionDTO.setReceiver( accountService.getAccount(bankTransactionDTO.getReceiver().getAccountId()));
+
         BankTransactionDTO createdTransaction = bankTransactionService.createTransaction(bankTransactionDTO);
         return new ResponseEntity<>(createdTransaction, HttpStatus.CREATED);
     }

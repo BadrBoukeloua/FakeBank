@@ -49,7 +49,7 @@ public class Account {
     @NotNull
     private LocalDateTime updatedAt;
 
-    @Column(precision = 19, scale = 2)
+    @Column(precision = 19, scale = 2,nullable = false)
     @NotNull
     @Min(0)
     private BigDecimal balance;
