@@ -10,5 +10,7 @@ import java.util.List;
 
 @Repository
 public interface BankTransactionRepo extends JpaRepository<BankTransaction, Long> {
+    @Query("SELECT t FROM BankTransaction t WHERE t.sender.accountId = :account OR t.receiver.accountId = :account")
+    public List<BankTransaction> findBySenderOrReceiver(Long account);
 
 }
