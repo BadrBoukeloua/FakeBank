@@ -1,7 +1,9 @@
 package com.yassirTest.fakeBank.Services;
 
 import com.yassirTest.fakeBank.CustomExceptions.AccountNotFoundException;
+import com.yassirTest.fakeBank.CustomExceptions.InvalidDeletionException;
 import com.yassirTest.fakeBank.Models.Entity.Account;
+import com.yassirTest.fakeBank.Models.Entity.BankTransaction;
 import com.yassirTest.fakeBank.Models.EntityDTO.AccountDTO;
 import com.yassirTest.fakeBank.Repoaitories.AccountRepo;
 import com.yassirTest.fakeBank.Repoaitories.BankTransactionRepo;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class AccountService {
@@ -38,6 +41,11 @@ public class AccountService {
         Account existingAccount = accountRepo.findById(accountId)
                 .orElseThrow(() -> new AccountNotFoundException("Account with ID " + accountId + " not found"));
 
+        List<BankTransaction> bankTransactionList = bankTransactionRepo.findBySenderOrReceiver(accountId);
+        if (!bankTransactionList.isEmpty()) {
+            throw new InvalidDeletionException(
+                    "Cannot delete account with ID " + accountId + " as it has associated bank transactions");
+        }
         accountRepo.delete(existingAccount);
     }
 

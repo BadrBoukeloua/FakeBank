@@ -2,7 +2,10 @@ package com.yassirTest.fakeBank.Services;
 
 
 import com.yassirTest.fakeBank.CustomExceptions.CustomerNotFoundException;
+import com.yassirTest.fakeBank.CustomExceptions.InvalidDeletionException;
+import com.yassirTest.fakeBank.Models.Entity.Account;
 import com.yassirTest.fakeBank.Models.Entity.Customer;
+import com.yassirTest.fakeBank.Models.EntityDTO.AccountDTO;
 import com.yassirTest.fakeBank.Models.EntityDTO.CustomerDTO;
 import com.yassirTest.fakeBank.Repoaitories.AccountRepo;
 import com.yassirTest.fakeBank.Repoaitories.CustomerRepo;
@@ -48,7 +51,11 @@ public class CustomerService {
     public void deleteCustomer(Long customerId) throws CustomerNotFoundException {
         Customer existingCustomer = customerRepo.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer with ID " + customerId + " not found"));
-
+        List<Account> customerAccounts = accountRepo.findByCustomerCustomerId(customerId);
+        if (!customerAccounts.isEmpty()) {
+            throw new InvalidDeletionException(
+                    "Cannot delete customer with ID " + customerId + " as it has associated accounts");
+        }
         customerRepo.delete(existingCustomer);
     }
 
@@ -62,5 +69,16 @@ public class CustomerService {
         return CustomerDTO.toDTO(customerRepo.save(updatedCustomer));
     }
 
+    public List<AccountDTO> customerAccounts(Long customerId) {
+        List<Account> customerAccounts = accountRepo.findByCustomerCustomerId(customerId);
+        List<AccountDTO> customerAccountsDTO = new ArrayList<>();
 
+        if (!customerAccounts.isEmpty()) {
+            for (Account customerAccount : customerAccounts) {
+                customerAccountsDTO.add(AccountDTO.toDTO(customerAccount));
+            }
+        }
+
+        return customerAccountsDTO;
+    }
 }
